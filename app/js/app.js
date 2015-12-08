@@ -1,7 +1,18 @@
 (function() {
   'use strict';
 
-  var partials = ['intro', 'about', 'questions'];
+  var partials = [
+    'intro',
+    'about',
+    'ember',
+    'emberCli',
+    'handlebars',
+    'models',
+    'controllers',
+    'router',
+    'components',
+    'next',
+    'questions'];
 
   activate();
 
