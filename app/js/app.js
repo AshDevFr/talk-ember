@@ -1,40 +1,30 @@
 (function() {
   'use strict';
 
-  var partials = [
-    'intro',
-    'about',
-    'ember',
-    'emberCli',
-    'handlebars',
-    'models',
-    'controllers',
-    'router',
-    'components',
-    'next',
-    'questions'];
-
   activate();
 
   function supportsImports() {
     return 'import' in document.createElement('link');
   }
 
-  function importPartial(id) {
+  function importPartials() {
     var slideContainer = document.querySelector('#slides'),
-        link           = document.querySelector('link[rel="import"]#partial-' + id),
-        content;
+        link           = document.querySelectorAll('link[rel="import"][role="slide"]'),
+        content, i;
 
-    if (link && link.import) {
-      content = link.import.querySelector('.partial');
-      if (slideContainer && content) {
-        slideContainer.appendChild(content.cloneNode(true));
+    if (link) {
+      for (i=0; i<link.length; i++) {
+        if(link[i].import) {
+          content = link[i].import.querySelector('.partial');
+          if (slideContainer && content) {
+            slideContainer.appendChild(content.cloneNode(true));
+          }
+        }
       }
     }
   }
 
   function activate() {
-    var i;
     if (supportsImports()) {
       console.log('HTML Import supported!');
     } else {
@@ -42,9 +32,8 @@
       return;
     }
 
-    for (i = 0; i < partials.length; i++) {
-      importPartial(partials[i]);
-    }
+    importPartials();
+
 
     Reveal.initialize({
 
