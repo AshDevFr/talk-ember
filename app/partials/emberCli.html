@@ -88,12 +88,34 @@
       </aside>
    </section>
    <section>
-      <h3>Add a new resource</h3>
+      <h3>Add a bower dependency</h3>
 
       <p>
-         ember generate resource &lt;resource name&gt; &lt;options&gt;
+         Exemple: Install a localstorage adapter
       </p>
-      <img width="800" src="/img/ember_resource_emberTodo.gif" alt=""/>
+
+      <pre class="fragment" data-fragment-index="1"><code class="shell">
+   $ bower install ember-localstorage-adapter
+      </code></pre>
+
+      <br>
+
+      <p class="fragment" data-fragment-index="2">
+         In the file <em>ember-cli-build.js</em>
+      </p>
+
+      <pre class="fragment" data-fragment-index="2"><code class="javascript">
+   var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+
+   module.exports = function(defaults) {
+      var app = new EmberApp(defaults, {});
+
+      app.import(app.bowerDirectory +
+            '/ember-localstorage-adapter/localstorage_adapter.js');
+
+      return app.toTree();
+   };
+      </code></pre>
 
       <aside class="notes">
          <ul>
