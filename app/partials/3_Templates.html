@@ -10,12 +10,26 @@
       </p>
    </section>
    <section>
-      <h3>The application template</h3>
+      <h3>Handlebars Basics</h3>
 
       <p>
+         Handlebars uses curly braces expressions
       </p>
-      <pre><code class="html">
 
+      <pre style="text-align:center"><code class="hbs" data-trim>
+  Hello, <strong>{{firstName}} {{lastName}}</strong>!
+      </code></pre>
+      <br>
+
+      <p>
+         The <i>firstname</i> and <i>lastname</i> properties comes from the controller
+      </p>
+
+      <pre><code class="js">
+   export default Ember.Controller.extend({
+      firstName: 'Trek',
+      lastName: 'Glowacki'
+   });
       </code></pre>
 
       <aside class="notes">
@@ -25,12 +39,55 @@
       </aside>
    </section>
    <section>
+      <h3>The application template</h3>
+
+      <p>
+         The application template is the default template that is rendered when your application starts.
+      </p>
+      <pre><code class="hbs">
+   <header>
+      <h1>Todos</h1>
+   </header>
+
+   <div>
+      {{outlet}}
+   </div>
+
+   <footer>
+      &copy;2016 Todo List
+   </footer>
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li>{{outlet}} is a <strong>placeholder</strong> that the router will fill in with the appropriate template, based on the current URL.</li>
+         </ul>
+      </aside>
+   </section>
+   <section>
       <h3>Conditionnals</h3>
 
       <p>
+         if / else if / else
       </p>
-      <pre><code class="html">
+      <pre><code class="hbs">
+   {{#if person}}
+      Welcome back, <b>{{person.firstName}} {{person.lastName}}</b>!
+      ...
+   {{else if demo}}
+      Demo mode!
+      ...
+   {{else}}
+      Please log in.
+   {{/if}}
+      </code></pre>
+      <br>
 
+      <p>unless</p>
+      <pre><code class="hbs">
+   {{#unless hasPaid}}
+      You owe: ${{total}}
+   {{/unless}}
       </code></pre>
 
       <aside class="notes">
@@ -43,9 +100,44 @@
       <h3>Lists</h3>
 
       <p>
+         Iterate on an array
       </p>
-      <pre><code class="html">
+      <pre><code class="hbs">
+   <ul>
+      {{#each people key="id" as |person|}}
+         <li>Hello, {{person.name}}!</li>
+      {{else}}
+         Sorry, nobody is here.
+      {{/each}}
+   </ul>
+      </code></pre>
+      <br>
 
+      <p>Other key possible values : @index / @item / @guid</p>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Binding Element Attibutes</h3>
+
+      <p>
+         Binding a simple attribute
+      </p>
+
+      <pre style="text-align:center"><code class="hbs" data-trim>
+&lt;img src={{logoUrl}} alt="Logo">
+      </code></pre>
+      <br>
+
+      <p>
+         It will generate :
+      </p>
+      <pre style="text-align:center"><code class="html" data-trim>
+&lt;img src="http://www.example.com/images/logo.png" alt="Logo">
       </code></pre>
 
       <aside class="notes">
@@ -58,14 +150,37 @@
       <h3>Binding Element Attibutes</h3>
 
       <p>
+         Adding data attributes (Not supported by default)
       </p>
-      <pre><code class="html">
+      <pre><code class="hbs" data-trim>
+   {{#link-to "photos" data-toggle="dropdown"}}Photos{{/link-to}}
+      </code></pre>
 
+      <p>First method: specific</p>
+      <pre><code class="js">
+   export default Ember.LinkComponent.reopen({
+      attributeBindings: ['data-toggle']
+   });
+      </code></pre>
+
+      <p>Second method: global</p>
+      <pre><code class="js">
+   export default Ember.View.reopen({
+      init() {
+         this._super();
+         var self = this;
+         Ember.keys(this).forEach(function(key) {
+            if (key.substr(0, 5) === 'data-') {
+               self.get('attributeBindings').pushObject(key);
+            }
+         });
+      }
+   });
       </code></pre>
 
       <aside class="notes">
          <ul>
-            <li></li>
+            <li>By default, view helpers do not accept data attributes.</li>
          </ul>
       </aside>
    </section>
@@ -73,9 +188,21 @@
       <h3>Binding Element Class Names</h3>
 
       <p>
+         Simple binding
       </p>
-      <pre><code class="html">
+      <pre><code class="hbs">
+   &lt;div class={{className}}>
+      ...
+   &lt;/div>
+      </code></pre>
 
+      <p>
+         Conditionnal binding
+      </p>
+      <pre><code class="hbs">
+   &lt;div class={{if isEnabled 'enabled' 'disabled'}}>
+      ...
+   &lt;/div>
       </code></pre>
 
       <aside class="notes">
@@ -88,9 +215,115 @@
       <h3>Links</h3>
 
       <p>
+         Ember provide an helper: {{link-to}}
       </p>
-      <pre><code class="html">
+      <pre><code class="js">
+   Router.map(function() {
+      this.route('photos', function(){
+         this.route('edit', { path: '/:photo_id' });
+      });
+   });
+      </code></pre>
 
+      <pre><code class="hbs">
+   <ul>
+      {{#each photos as |photo|}}
+         <li>
+            {{#link-to 'photos.edit' photo}}{{photo.title}}{{/link-to}}
+         </li>
+      {{/each}}
+   </ul>
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Links</h3>
+
+      <p>
+         It will generate :
+      </p>
+
+      <pre><code class="html">
+   <ul>
+      <li><a href="/photos/1">Happy Kittens</a></li>
+      <li><a href="/photos/2">Puppy Running</a></li>
+      <li><a href="/photos/3">Mountain Landscape</a></li>
+   </ul>
+      </code></pre>
+      <br>
+
+      <p>
+         (When the rendered link matches the current route, it will have <i>class="active"</i>)
+      </p>
+
+      <pre><code class="html">
+   <ul>
+      <li><a href="/photos/1" class="active">Happy Kittens</a></li>
+      ...
+   </ul>
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Links</h3>
+
+      <p>
+         Multiple segments
+      </p>
+      <pre><code class="js">
+   Router.map(function() {
+      this.route('photos', function(){
+         this.route('photo', { path: '/:photo_id' }, function(){
+            this.route('comments');
+            this.route('comment', { path: '/comments/:comment_id' });
+         });
+      });
+   });
+      </code></pre>
+
+      <pre><code class="hbs">
+   <p>
+      {{#link-to 'photo.comment' nextPhoto primaryComment}}
+         Main Comment for the Next Photo
+      {{/link-to}}
+   </p>
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Link</h3>
+
+      <p>
+         Inline helper
+      </p>
+      <pre><code class="hbs">
+   {{#link-to 'index'}}Home{{/link-to}}
+   {{link-to 'Home' 'index'}}
+      </code></pre>
+      <br>
+
+      <p>
+         It will generate :
+      </p>
+
+      <pre><code class="html">
+   <a href='/'>Home</a>
+   <a href='/'>Home</a>
       </code></pre>
 
       <aside class="notes">
@@ -103,9 +336,190 @@
       <h3>Actions</h3>
 
       <p>
+         Add an action to a button
       </p>
-      <pre><code class="html">
+      <pre style="text-align:center"><code class="hbs" data-trim>
+  &lt;button {{action 'doSomething'}}>Action&lt;/button>
+      </code></pre>
+      <br>
 
+      <p>
+         In your controller
+      </p>
+      <pre><code class="js">
+   export default Ember.Controller.extend({
+      actions: {
+         doSomething() {
+            ...
+         }
+      }
+   });
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Actions</h3>
+
+      <p>
+         Action Bubbling
+      </p>
+
+      <img src="img/action-bubbling.png" alt="">
+
+      <aside class="notes">
+         <ul>
+            <li>By default, the {{action}} helper triggers a method on the template's controller</li>
+            <li>
+               If the controller does not implement a method with the same name as the action in its actions object,
+               the action will be sent to the router,
+               where the currently active leaf route will be given a chance to handle the action.
+            </li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Actions</h3>
+
+      <p>
+         Action Bubbling
+      </p>
+
+      <pre style="text-align:center"><code class="hbs" data-trim>
+         &lt;button {{action 'doSomething'}}>Action&lt;/button>
+      </code></pre>
+      <br>
+
+      <pre><code class="js">
+   export default Ember.Route.extend({
+      actions: {
+         doSomething() {
+            ...
+            return true; // to continue bubbling
+         }
+      }
+   });
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Actions</h3>
+
+      <p>
+         Parameters
+      </p>
+
+      <pre style="text-align:center"><code class="hbs" data-trim>
+         &lt;button {{action "select" post}}>{{post.title}}&lt;/button>
+      </code></pre>
+      <br>
+
+      <p>
+         In your controller
+      </p>
+      <pre><code class="js">
+   export default Ember.Controller.extend({
+      actions: {
+         select(post) {
+            //do some stuff with your post
+         }
+      }
+   });
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li>
+               You can optionally pass arguments to the action handler.
+               Any values passed to the {{action}} helper after the action name will be passed to the handler as arguments.
+            </li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Actions</h3>
+
+      <p>
+         Specifying an alternative event
+      </p>
+      <pre style="text-align:center"><code class="hbs" data-trim>
+         &lt;button {{action "select" post on="mouse-up"}}>{{post.title}}&lt;/button>
+      </code></pre>
+      <br>
+
+      <p>
+         Specifying whitelisted modifier keys
+      </p>
+      <pre style="text-align:center"><code class="hbs" data-trim>
+         &lt;button {{action "select" post allowedKeys="alt"}}>{{post.title}}&lt;/button>
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li>
+               By default, the {{action}} helper listens for click events and triggers the action when the user clicks on the element.
+            </li>
+            <li>
+               You can specify an alternative event by using the on option.
+            </li>
+            <li>
+               By default the {{action}} helper will ignore click events with pressed modifier keys.
+               You can supply an allowedKeys option to specify which keys should not be ignored.
+            </li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Actions</h3>
+
+      <p>
+         Default event
+      </p>
+      <pre style="text-align:center"><code class="hbs" data-trim>
+         &lt;a href="somewhere" {{action "logClick" preventDefault=false}}>Link&lt;/a>
+      </code></pre>
+      <br>
+
+      <p>
+         Stopping propagation
+      </p>
+      <pre style="text-align:center"><code class="hbs" data-trim>
+         &lt;button {{action "close" bubbles=false}}>Close&lt;/button>
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li>By default, event.preventDefault() is called on all events handled by {{action}} helpers.</li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Inuput helpers</h3>
+
+      <p>
+         {{input}} and {{textarea}} helpers
+      </p>
+      <pre style="text-align:center"><code class="hbs" data-trim>
+         {{input value="Hello world!"}}
+         {{textarea value="Hello world!" cols="80" rows="6"}}
+      </code></pre>
+      <br>
+
+      <p>
+         It will generate :
+      </p>
+      <pre style="text-align:center"><code class="html" data-trim>
+         &lt;input type="text" value="Hello world!"/>
+         &lt;textarea cols="80" rows="6">Hello world!&lt;/textarea>
       </code></pre>
 
       <aside class="notes">
@@ -118,9 +532,20 @@
       <h3>Inuput helpers</h3>
 
       <p>
+         Use parameters and actions
       </p>
-      <pre><code class="html">
+      <pre style="text-align:center"><code class="hbs" data-trim>
+{{input type="text" value=aValue key-press="updateMyValue"}}
 
+{{input type="text" disabled=entryNotAllowed size="50"}}
+      </code></pre>
+      <br>
+
+      <p>
+         Checkboxes
+      </p>
+      <pre style="text-align:center"><code class="hbs" data-trim>
+         {{input type="checkbox" name="isAdmin" checked=isAdmin}}
       </code></pre>
 
       <aside class="notes">
@@ -133,8 +558,149 @@
       <h3>Rendering with helpers</h3>
 
       <p>
+         {{partial}}
+      </p>
+      <p>app/templates/author.hbs</p>
+      <pre><code class="hbs" data-trim>
+Written by {{author.firstName}} {{author.lastName}}
+      </code></pre>
+
+      <p>app/templates/post.hbs (you specify the template)</p>
+      <pre><code class="hbs" data-trim>
+<h1>{{title}}</h1>
+<div>{{body}}</div>
+{{partial "author"}}
+      </code></pre>
+
+      <p>
+         It will generate :
       </p>
       <pre><code class="html">
+   <h1>Why You Should Use Ember.js</h1>
+   <div>Because it's awesome!</div>
+   Written by Yehuda Katz
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Rendering with helpers</h3>
+
+      <p>
+         {{render}}
+      </p>
+      <p>app/templates/author.hbs</p>
+      <pre><code class="hbs" data-trim>
+Written by {{firstName}} {{lastName}}.
+Total Posts: {{postCount}}
+      </code></pre>
+
+      <p>app/templates/post.hbs (you specify the context)</p>
+      <pre><code class="hbs" data-trim>
+<h1>{{title}}</h1>
+<div>{{body}}</div>
+{{render "author" author}}
+      </code></pre>
+
+      <p>
+         app/controllers/author.js
+      </p>
+      <pre><code class="js">
+   export default Ember.Controller.extend({
+      postCount: Ember.computed('model.posts.[]', function() {
+         return this.get('model.posts.length');
+      })
+   })
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li>
+               In this example, render will:
+               <ul>
+                  <li>Use the corresponding template (in this case the default of "author")</li>
+                  <li>Get (or generate) the singleton instance of AuthorController</li>
+                  <li>Set the AuthorController's model to the 2nd argument passed to render, here the author field on the post</li>
+                  <li>Render the template in place, with the context created in the previous steps.</li>
+               </ul>
+            </li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Rendering with helpers</h3>
+
+      <p>
+         Partial vs Render
+      </p><br>
+
+      <table>
+         <thead>
+         <tr>
+            <th>Helper</th>
+            <th>Template</th>
+            <th>Model</th>
+            <th>Controller</th>
+         </tr>
+         </thead>
+         <tbody>
+         <tr>
+            <td><small>{{partial}}</small></td>
+            <td><small>Specified Template</small></td>
+            <td><small>Current Model</small></td>
+            <td><small>Current Controller</small></td>
+         </tr>
+         <tr>
+            <td><small>{{render}}</small></td>
+            <td><small>Template</small></td>
+            <td><small>Specified Model</small></td>
+            <td><small>Specified Controller</small></td>
+         </tr>
+         </tbody>
+      </table>
+      <br>
+
+      <table>
+         <thead>
+         <tr>
+            <th>Helper</th>
+            <th>Template</th>
+            <th>Model</th>
+            <th>Controller</th>
+         </tr>
+         </thead>
+         <tbody>
+         <tr>
+            <td><small>{{partial "author"}}</small></td>
+            <td><small>templates/author.hbs</small></td>
+            <td><small>models/post.js</small></td>
+            <td><small>controllers/post.js</small></td>
+         </tr>
+         <tr>
+            <td><small>{{render "author" author}}</small></td>
+            <td><small>templates/author.hbs</small></td>
+            <td><small>models/author.js</small></td>
+            <td><small>controllers/author.js</small></td>
+         </tr>
+         </tbody>
+      </table>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Writing helpers</h3>
+
+      <p>
+      </p>
+      <pre><code class="hbs">
 
       </code></pre>
 
@@ -145,11 +711,75 @@
       </aside>
    </section>
    <section>
-      <h3>Wrinting helpers</h3>
+      <h3>Writing helpers</h3>
+
+      <p>
+         Helpers arguments
+      </p>
+      <pre><code class="hbs">
+
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Writing helpers</h3>
+
+      <p>
+         Named arguments
+      </p>
+      <pre><code class="hbs">
+
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Writing helpers</h3>
+
+      <p>
+         Stateful helpers
+      </p>
+      <pre><code class="hbs">
+
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Writing helpers</h3>
+
+      <p>
+         Adding services
+      </p>
+      <pre><code class="hbs">
+
+      </code></pre>
+
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Writing helpers</h3>
 
       <p>
       </p>
-      <pre><code class="html">
+      <pre><code class="hbs">
 
       </code></pre>
 
