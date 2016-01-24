@@ -149,34 +149,4 @@
          <li>...</li>
       </ul>
    </section>
-   <section>
-      <h3>Add a bower dependency</h3>
-
-      <p>
-         Exemple: Install a localstorage adapter
-      </p>
-
-      <pre class="fragment" data-fragment-index="1"><code class="shell">
-   $ bower install ember-localstorage-adapter
-      </code></pre>
-
-      <br>
-
-      <p class="fragment" data-fragment-index="2">
-         <em>ember-cli-build.js</em>
-      </p>
-
-      <pre class="fragment" data-fragment-index="2"><code class="javascript">
-   var EmberApp = require('ember-cli/lib/broccoli/ember-app');
-
-   module.exports = function(defaults) {
-      var app = new EmberApp(defaults, {});
-
-      app.import(app.bowerDirectory +
-            '/ember-localstorage-adapter/localstorage_adapter.js');
-
-      return app.toTree();
-   };
-      </code></pre>
-   </section>
 </section>
