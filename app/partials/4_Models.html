@@ -10,9 +10,17 @@
       <h3>Defining Models</h3>
 
       <p>
+         app/models/person.js
       </p>
-      <pre><code class="html">
-
+      <pre><code class="js">
+   export default DS.Model.extend({
+      firstName: DS.attr(),
+      lastName: DS.attr(),
+      fullName: Ember.computed('firstName', 'lastName', function() {
+         return this.get('firstName') + ' ' + this.get('lastName');
+      }),
+      birthday: DS.attr()
+   });
       </code></pre>
 
       <aside class="notes">
@@ -22,12 +30,23 @@
       </aside>
    </section>
    <section>
-      <h3>Creating and Deleting Records</h3>
+      <h3>Creating / Editing Records</h3>
 
       <p>
+         The store is a like a cache,
+         if you want to persist records you have to push / persist them
       </p>
-      <pre><code class="html">
+      <pre><code class="js">
+   var person = store.createRecord('person', {
+      firstName: 'Tomster',
+      lastName: 'Mascot'
+   });
 
+   person.save(); // => POST to '/persons'
+
+   store.findRecord('person', 1).then(function(person) {
+      person.set('birthday', someDate);
+   });
       </code></pre>
 
       <aside class="notes">
@@ -37,27 +56,21 @@
       </aside>
    </section>
    <section>
-      <h3>Pushing Records into the Store</h3>
+      <h3>Deleting Records</h3>
 
       <p>
       </p>
-      <pre><code class="html">
+      <pre><code class="js">
+   store.findRecord('person', 1).then(function(person) {
+      person.deleteRecord();
+      person.get('isDeleted'); // => true
+      person.save(); // => DELETE to /persons/1
+   });
 
-      </code></pre>
-
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Persisting Records</h3>
-
-      <p>
-      </p>
-      <pre><code class="html">
-
+   // OR
+   store.findRecord('person', 2).then(function(person) {
+      person.destroyRecord(); // => DELETE to /persons/2
+   });
       </code></pre>
 
       <aside class="notes">
@@ -70,69 +83,19 @@
       <h3>Finding Records</h3>
 
       <p>
+         Retrieving a single record
       </p>
-      <pre><code class="html">
-
+      <pre><code class="js">
+   var post = this.store.findRecord('post', 1); // => GET /posts/1
+   var post = this.store.peekRecord('post', 1); // => no network request
       </code></pre>
 
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Working with Records</h3>
-
       <p>
+         Retrieving
       </p>
-      <pre><code class="html">
-
-      </code></pre>
-
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>The Rest Adapter</h3>
-
-      <p>
-      </p>
-      <pre><code class="html">
-
-      </code></pre>
-
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Connecting to an HTTP Server</h3>
-
-      <p>
-      </p>
-      <pre><code class="html">
-
-      </code></pre>
-
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Handling Metadata</h3>
-
-      <p>
-      </p>
-      <pre><code class="html">
-
+      <pre><code class="js">
+   var posts = this.store.findAll('post'); // => GET /posts
+   var posts = this.store.peekAll('post'); // => no network request
       </code></pre>
 
       <aside class="notes">
@@ -145,9 +108,15 @@
       <h3>Customizing Adapters</h3>
 
       <p>
+         In Ember Data, the logic for communicating with a backend data store lives in the Adapter
       </p>
-      <pre><code class="html">
-
+      <p>
+         app/adapters/application.js
+      </p>
+      <pre><code class="js">
+   export default DS.LSAdapter.extend({
+      namespace: 'api'
+   });
       </code></pre>
 
       <aside class="notes">
