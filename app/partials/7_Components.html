@@ -1,0 +1,65 @@
+<section class=partial>
+   <section>
+      <h2>Components</h2>
+
+      <p>
+      </p>
+   </section>
+   <section>
+      <h3>Defining a Component</h3>
+      <p>app/templates/components/todo-item.hbs</p>
+      <pre><code class="html"><div class="todo">
+   <h1 {{action "someAction"}}>{{title}}</h1>
+   <p>{{desc}}</p>
+</div></code></pre>
+      <p>app/components/todo-item.js</p>
+      <pre><code class="js">   export default Ember.Component.extend({
+      tagName : 'li',
+      actions : {
+         // ...
+      }
+   });</code></pre>
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Using a Component</h3>
+      <p>app/templates/todos.hbs</p>
+      <pre><code class="html"><ul id="todo-list">
+   {{#each model as |todo|}}
+      {{todo-item todo=todo}}
+   {{/each}}
+</ul></code></pre>
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+   <section>
+      <h3>Wrapping Content in a Component</h3>
+      <p>app/templates/components/todo-item.hbs</p>
+      <pre><code class="html"><div class="todo">
+   <h1 {{action "someAction"}}>{{title}}</h1>
+   <p>{{desc}}</p>
+   <p>{{yield}}</p><!-- Will contain your content -->
+</div></code></pre>
+
+      <p>app/templates/todos.hbs</p>
+      <pre><code class="html"><ul id="todo-list">
+   {{#each model as |todo|}}
+      {{todo-item todo=todo}}
+         <!-- Some Content -->
+      {{/todo-item}}
+   {{/each}}
+</ul></code></pre>
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+</section>
