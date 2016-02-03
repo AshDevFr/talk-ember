@@ -1,0 +1,35 @@
+<section class=partial>
+   <section>
+      <h2>Controllers</h2>
+
+      <p>
+         In Ember.js, controllers allow you to decorate your models with display logic
+      </p>
+   </section>
+   <section>
+      <h3>Actions / Properties</h3>
+      <p></p>
+      <pre><code class="js">export default Ember.Controller.extend({
+   actions : {
+      //...
+      clearCompleted : function() {
+         var completed = this.get('done');
+         completed.invoke('destroyRecord');
+      }
+   },
+   // ...
+   done : Ember.computed('model.length', 'model.@each.isDone', function() {
+      let todos = this.get('model').filter((todo) => {
+         return todo.get('isDone');
+      });
+      return todos;
+   }),
+   // ...
+});</code></pre>
+      <aside class="notes">
+         <ul>
+            <li></li>
+         </ul>
+      </aside>
+   </section>
+</section>
