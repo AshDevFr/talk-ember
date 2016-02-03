@@ -3,12 +3,29 @@
       <h2>Router</h2>
 
       <p>
+         It translates the URL into a series of nested templates with their model
+      </p>
+      <p>
+         In Ember.js each State is represented by a URL
       </p>
    </section>
    <section>
       <h3>Defining Your Routes</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
+      <p>
+         app/router.js
+      </p>
+      <pre><code class="js">
+   Router.map(function() {
+      this.route('todos', {path : '/'});
+   });
+      </code></pre>
+      <pre><code class="js">
+   Router.map(function() {
+      this.route('todos', {path : '/'}, function() {
+         this.route('edit');
+      });
+   });
+      </code></pre>
       <aside class="notes">
          <ul>
             <li></li>
@@ -16,79 +33,16 @@
       </aside>
    </section>
    <section>
-      <h3>Generated Objects</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Specifying a Route's Model</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Setting Up a Controller</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Rendering a Template</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Redirecting</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Specifying the URL Type</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Query Parameters</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Asynchronous Routing</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
+      <h3>Dynamic segments</h3>
+      <p>The route handler converts a URL into a model</p>
+      <p>app/routes/todos.js</p>
+      <pre><code class="js">
+   export default Ember.Route.extend({
+      model () {
+         return this.store.findAll('todo');
+      }
+   });
+      </code></pre>
       <aside class="notes">
          <ul>
             <li></li>
@@ -97,18 +51,21 @@
    </section>
    <section>
       <h3>Loading / Error Substates</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
-      <aside class="notes">
-         <ul>
-            <li></li>
-         </ul>
-      </aside>
-   </section>
-   <section>
-      <h3>Preventing and Retrying Transitions</h3>
-      <p></p>
-      <pre><code class="html"> </code></pre>
+      <p>
+         Ember provides a default implementation of the loading / error process
+      </p>
+      <p>
+         Routes
+      </p>
+      <pre><code class="js">   todos.edit.loading
+   todos.loading
+   loading</code></pre>
+      <p>
+         Templates
+      </p>
+      <pre><code class="js">   app/templates/todos/edit/loading.hbs
+   app/templates/todos/loading.hbs
+   app/templates/loading.hbs</code></pre>
       <aside class="notes">
          <ul>
             <li></li>
