@@ -19,9 +19,7 @@
    },
    // ...
    done : Ember.computed('model.length', 'model.@each.isDone', function() {
-      let todos = this.get('model').filter((todo) => {
-         return todo.get('isDone');
-      });
+      let todos = this.get('model').filter(todo => todo.get('isDone'));
       return todos;
    }),
    // ...
