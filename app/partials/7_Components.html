@@ -10,7 +10,7 @@
       <h3>Defining a Component</h3>
       <p>app/templates/components/todo-item.hbs</p>
       <pre><code class="html"><div class="todo">
-   <h1 {{action "someAction"}}>{{title}}</h1>
+   &lt;h1 {{action "someAction"}}>{{title}}</h1>
    <p>{{desc}}</p>
 </div></code></pre>
       <p>app/components/todo-item.js</p>
@@ -44,7 +44,7 @@
       <h3>Wrapping Content in a Component</h3>
       <p>app/templates/components/todo-item.hbs</p>
       <pre><code class="html"><div class="todo">
-   <h1 {{action "someAction"}}>{{title}}</h1>
+   &lt;h1 {{action "someAction"}}>{{title}}</h1>
    <p>{{desc}}</p>
    <p>{{yield}}</p><!-- Will contain your content -->
 </div></code></pre>
